@@ -1,0 +1,490 @@
+{
+	"info": {
+		"_postman_id": "b5d7f9e8-3a1c-4d5e-9f8a-2c6b7d8e9a3f",
+		"name": "Job Management API",
+		"description": "Collection of APIs for managing technicians and jobs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Technicians",
+			"item": [
+				{
+					"name": "Create Technician",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"techName\": \"John Doe\",\n    \"doj\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/technicians",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "technicians"]
+						},
+						"description": "Create a new technician"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"techName\": \"John Doe\",\n    \"doj\": \"2024-01-15\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/technicians"
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"techId\": 1,\n    \"techName\": \"John Doe\",\n    \"doj\": \"2024-01-15\",\n    \"jobs\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Technicians",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/technicians",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "technicians"]
+						},
+						"description": "Get all technicians"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/technicians"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "[\n    {\n        \"techId\": 1,\n        \"techName\": \"John Doe\",\n        \"doj\": \"2024-01-15\",\n        \"jobs\": [\n            {\n                \"jobId\": 1,\n                \"description\": \"Fix server connectivity issue\",\n                \"createdDate\": \"2024-03-10T09:00:00\",\n                \"completedDate\": \"2024-03-10T14:30:00\",\n                \"status\": \"COMPLETED\"\n            }\n        ]\n    },\n    {\n        \"techId\": 2,\n        \"techName\": \"Jane Smith\",\n        \"doj\": \"2024-02-01\",\n        \"jobs\": []\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Technician by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/technicians/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "technicians", "1"]
+						},
+						"description": "Get a technician by their ID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/technicians/1"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"techId\": 1,\n    \"techName\": \"John Doe\",\n    \"doj\": \"2024-01-15\",\n    \"jobs\": [\n        {\n            \"jobId\": 1,\n            \"description\": \"Fix server connectivity issue\",\n            \"createdDate\": \"2024-03-10T09:00:00\",\n            \"completedDate\": \"2024-03-10T14:30:00\",\n            \"status\": \"COMPLETED\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Technician",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"techName\": \"John Doe Updated\",\n    \"doj\": \"2024-01-15\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/technicians/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "technicians", "1"]
+						},
+						"description": "Update an existing technician"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"techName\": \"John Doe Updated\",\n    \"doj\": \"2024-01-15\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/technicians/1"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"techId\": 1,\n    \"techName\": \"John Doe Updated\",\n    \"doj\": \"2024-01-15\",\n    \"jobs\": [\n        {\n            \"jobId\": 1,\n            \"description\": \"Fix server connectivity issue\",\n            \"createdDate\": \"2024-03-10T09:00:00\",\n            \"completedDate\": \"2024-03-10T14:30:00\",\n            \"status\": \"COMPLETED\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Technician",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/technicians/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "technicians", "1"]
+						},
+						"description": "Delete a technician by ID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/technicians/1"
+								}
+							},
+							"status": "No Content",
+							"code": 204
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Jobs",
+			"item": [
+				{
+					"name": "Create Job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Fix server connectivity issue\",\n    \"technician\": {\n        \"techId\": 1\n    },\n    \"status\": \"PENDING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/jobs",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs"]
+						},
+						"description": "Create a new job"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"description\": \"Fix server connectivity issue\",\n    \"technician\": {\n        \"techId\": 1\n    },\n    \"status\": \"PENDING\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/jobs"
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"jobId\": 1,\n    \"description\": \"Fix server connectivity issue\",\n    \"technician\": {\n        \"techId\": 1,\n        \"techName\": \"John Doe\",\n        \"doj\": \"2024-01-15\"\n    },\n    \"createdDate\": \"2024-03-10T09:00:00\",\n    \"completedDate\": null,\n    \"status\": \"PENDING\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/jobs",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs"]
+						},
+						"description": "Get all jobs"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/jobs"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "[\n    {\n        \"jobId\": 1,\n        \"description\": \"Fix server connectivity issue\",\n        \"technician\": {\n            \"techId\": 1,\n            \"techName\": \"John Doe\",\n            \"doj\": \"2024-01-15\"\n        },\n        \"createdDate\": \"2024-03-10T09:00:00\",\n        \"completedDate\": \"2024-03-10T14:30:00\",\n        \"status\": \"COMPLETED\"\n    },\n    {\n        \"jobId\": 2,\n        \"description\": \"Install new software\",\n        \"technician\": {\n            \"techId\": 1,\n            \"techName\": \"John Doe\",\n            \"doj\": \"2024-01-15\"\n        },\n        \"createdDate\": \"2024-03-11T10:00:00\",\n        \"completedDate\": null,\n        \"status\": \"IN_PROGRESS\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Job by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/jobs/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs", "1"]
+						},
+						"description": "Get a job by its ID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/jobs/1"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"jobId\": 1,\n    \"description\": \"Fix server connectivity issue\",\n    \"technician\": {\n        \"techId\": 1,\n        \"techName\": \"John Doe\",\n        \"doj\": \"2024-01-15\"\n    },\n    \"createdDate\": \"2024-03-10T09:00:00\",\n    \"completedDate\": \"2024-03-10T14:30:00\",\n    \"status\": \"COMPLETED\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Jobs by Technician",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/jobs/technician/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs", "technician", "1"]
+						},
+						"description": "Get all jobs assigned to a specific technician"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/jobs/technician/1"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "[\n    {\n        \"jobId\": 1,\n        \"description\": \"Fix server connectivity issue\",\n        \"createdDate\": \"2024-03-10T09:00:00\",\n        \"completedDate\": \"2024-03-10T14:30:00\",\n        \"status\": \"COMPLETED\"\n    },\n    {\n        \"jobId\": 2,\n        \"description\": \"Install new software\",\n        \"createdDate\": \"2024-03-11T10:00:00\",\n        \"completedDate\": null,\n        \"status\": \"IN_PROGRESS\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Jobs by Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/jobs/status/PENDING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs", "status", "PENDING"]
+						},
+						"description": "Get all jobs with a specific status"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/jobs/status/PENDING"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "[\n    {\n        \"jobId\": 3,\n        \"description\": \"Setup network printer\",\n        \"technician\": {\n            \"techId\": 2,\n            \"techName\": \"Jane Smith\",\n            \"doj\": \"2024-02-01\"\n        },\n        \"createdDate\": \"2024-03-11T11:00:00\",\n        \"completedDate\": null,\n        \"status\": \"PENDING\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Update Job",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Fix server connectivity issue - Updated\",\n    \"technician\": {\n        \"techId\": 1\n    },\n    \"status\": \"COMPLETED\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/jobs/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs", "1"]
+						},
+						"description": "Update an existing job"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"description\": \"Fix server connectivity issue - Updated\",\n    \"technician\": {\n        \"techId\": 1\n    },\n    \"status\": \"COMPLETED\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/jobs/1"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"jobId\": 1,\n    \"description\": \"Fix server connectivity issue - Updated\",\n    \"technician\": {\n        \"techId\": 1,\n        \"techName\": \"John Doe\",\n        \"doj\": \"2024-01-15\"\n    },\n    \"createdDate\": \"2024-03-10T09:00:00\",\n    \"completedDate\": \"2024-03-10T14:30:00\",\n    \"status\": \"COMPLETED\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Job",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/jobs/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "jobs", "1"]
+						},
+						"description": "Delete a job by ID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/jobs/1"
+								}
+							},
+							"status": "No Content",
+							"code": 204
+						}
+					]
+				}
+			]
+		}
+	]
+} 

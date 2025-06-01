@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Implementation of the JobService interface.
+ * Provides the business logic for managing jobs in the system.
+ * Handles job creation, updates, deletion, and queries.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -20,6 +25,11 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final TechnicianRepository technicianRepository;
 
+    /**
+     * {@inheritDoc}
+     * Additionally, sets the creation date to current time if not provided,
+     * and validates the assigned technician exists.
+     */
     @Override
     public Job createJob(Job job) {
         if (job.getTechnician() != null && job.getTechnician().getTechId() != null) {
@@ -34,17 +44,27 @@ public class JobServiceImpl implements JobService {
         return jobRepository.save(job);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Job getJobById(Long id) {
         return jobRepository.findById(id)
                 .orElseThrow(() -> new JobNotFoundException(id));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     * Additionally, validates that the technician exists before querying their jobs.
+     */
     @Override
     public List<Job> getJobsByTechnicianId(Long techId) {
         if (!technicianRepository.existsById(techId)) {
@@ -53,11 +73,18 @@ public class JobServiceImpl implements JobService {
         return jobRepository.findByTechnicianTechId(techId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Job> getJobsByStatus(Job.JobStatus status) {
         return jobRepository.findByStatus(status);
     }
 
+    /**
+     * {@inheritDoc}
+     * Additionally, sets the completion date when status changes to COMPLETED.
+     */
     @Override
     public Job updateJob(Long id, Job job) {
         if (!jobRepository.existsById(id)) {
@@ -75,6 +102,9 @@ public class JobServiceImpl implements JobService {
         return jobRepository.save(job);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteJob(Long id) {
         if (!jobRepository.existsById(id)) {

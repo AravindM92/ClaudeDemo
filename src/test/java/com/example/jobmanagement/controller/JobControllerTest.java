@@ -24,6 +24,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Unit tests for the Job Controller.
+ * Tests all REST endpoints and their responses using MockMvc.
+ * Uses TestSecurityConfig to disable security for testing.
+ */
 @WebMvcTest(JobController.class)
 @Import(TestSecurityConfig.class)
 class JobControllerTest {
@@ -40,6 +45,10 @@ class JobControllerTest {
     private Job testJob;
     private List<Job> testJobs;
 
+    /**
+     * Sets up test data before each test.
+     * Creates sample job and technician data for testing.
+     */
     @BeforeEach
     void setUp() {
         testJob = new Job();
@@ -57,6 +66,10 @@ class JobControllerTest {
         testJobs = Arrays.asList(testJob, testJob2);
     }
 
+    /**
+     * Tests that getAllJobs endpoint returns a list of jobs successfully.
+     * Verifies the response status, content type, and response body.
+     */
     @Test
     void getAllJobs_ShouldReturnListOfJobs() throws Exception {
         when(jobService.getAllJobs()).thenReturn(testJobs);
@@ -69,6 +82,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$[0].description").value(testJob.getDescription()));
     }
 
+    /**
+     * Tests that getJobById endpoint returns a specific job successfully.
+     * Verifies the response status, content type, and job details.
+     */
     @Test
     void getJobById_ShouldReturnJob() throws Exception {
         when(jobService.getJobById(1L)).thenReturn(testJob);
@@ -80,6 +97,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.description").value(testJob.getDescription()));
     }
 
+    /**
+     * Tests that getJobsByTechnicianId endpoint returns jobs for a technician.
+     * Verifies the response status, content type, and job list.
+     */
     @Test
     void getJobsByTechnicianId_ShouldReturnJobs() throws Exception {
         when(jobService.getJobsByTechnicianId(1L)).thenReturn(testJobs);
@@ -90,6 +111,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    /**
+     * Tests that getJobsByStatus endpoint returns jobs with specific status.
+     * Verifies the response status, content type, and filtered jobs.
+     */
     @Test
     void getJobsByStatus_ShouldReturnJobs() throws Exception {
         when(jobService.getJobsByStatus(Job.JobStatus.PENDING)).thenReturn(Arrays.asList(testJob));
@@ -101,6 +126,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$[0].status").value("PENDING"));
     }
 
+    /**
+     * Tests that createJob endpoint creates a new job successfully.
+     * Verifies the response status is CREATED and job details are correct.
+     */
     @Test
     void createJob_ShouldReturnCreatedJob() throws Exception {
         when(jobService.createJob(any(Job.class))).thenReturn(testJob);
@@ -114,6 +143,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.description").value(testJob.getDescription()));
     }
 
+    /**
+     * Tests that updateJob endpoint updates an existing job successfully.
+     * Verifies the response status and updated job details.
+     */
     @Test
     void updateJob_ShouldReturnUpdatedJob() throws Exception {
         when(jobService.updateJob(eq(1L), any(Job.class))).thenReturn(testJob);
@@ -127,6 +160,10 @@ class JobControllerTest {
                 .andExpect(jsonPath("$.description").value(testJob.getDescription()));
     }
 
+    /**
+     * Tests that deleteJob endpoint deletes a job successfully.
+     * Verifies the response status is NO_CONTENT.
+     */
     @Test
     void deleteJob_ShouldReturnNoContent() throws Exception {
         doNothing().when(jobService).deleteJob(1L);

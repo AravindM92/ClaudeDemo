@@ -12,39 +12,91 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+/**
+ * Global exception handler for the application.
+ * Provides centralized exception handling across all controllers.
+ * Converts exceptions into appropriate HTTP responses with error details.
+ */
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
-            ResourceNotFoundException ex,
-            HttpServletRequest request) {
-        log.error("Resource not found: {}", ex.getMessage());
-        return createErrorResponse(
-                HttpStatus.NOT_FOUND,
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Resource Not Found"
-        );
+    /**
+     * Handles validation errors from request body validation.
+     *
+     * @param ex the MethodArgumentNotValidException that was thrown
+     * @param request the web request in which the exception occurred
+     * @return ResponseEntity containing validation error details
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(
+            MethodArgumentNotValidException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Validation Error")
+                .message("Invalid input data")
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .validationErrors(errors)
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles resource not found exceptions.
+     *
+     * @param ex the ResourceNotFoundException that was thrown
+     * @param request the web request in which the exception occurred
+     * @return ResponseEntity containing error details
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
+            ResourceNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("Not Found")
+                .message(ex.getMessage())
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles invalid job status exceptions.
+     *
+     * @param ex the InvalidJobStatusException that was thrown
+     * @param request the web request in which the exception occurred
+     * @return ResponseEntity containing error details
+     */
     @ExceptionHandler(InvalidJobStatusException.class)
     public ResponseEntity<ErrorResponse> handleInvalidJobStatusException(
-            InvalidJobStatusException ex,
-            HttpServletRequest request) {
-        log.error("Invalid job status: {}", ex.getMessage());
-        return createErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage(),
-                request.getRequestURI(),
-                "Invalid Job Status"
-        );
+            InvalidJobStatusException ex, WebRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Invalid Job Status")
+                .message(ex.getMessage())
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JobNotFoundException.class)
@@ -70,23 +122,6 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getRequestURI(),
                 "Technician Not Found"
-        );
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request) {
-        log.error("Validation error: {}", ex.getMessage());
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> 
-            errors.put(error.getField(), error.getDefaultMessage())
-        );
-        return createErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                "Validation failed: " + errors,
-                request.getRequestURI(),
-                "Validation Error"
         );
     }
 
@@ -116,17 +151,27 @@ public class GlobalExceptionHandler {
         );
     }
 
+    /**
+     * Handles all other unhandled exceptions.
+     *
+     * @param ex the Exception that was thrown
+     * @param request the web request in which the exception occurred
+     * @return ResponseEntity containing error details
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllUncaughtException(
-            Exception ex,
-            HttpServletRequest request) {
-        log.error("Unexpected error occurred: ", ex);
-        return createErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred",
-                request.getRequestURI(),
-                "Internal Server Error"
-        );
+            Exception ex, WebRequest request) {
+        log.error("Unexpected error occurred", ex);
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Internal Server Error")
+                .message("An unexpected error occurred")
+                .path(((ServletWebRequest) request).getRequest().getRequestURI())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponse(
